@@ -1,3 +1,3 @@
-<script>
+<script class='controller'>
 
 </script>

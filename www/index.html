@@ -66,42 +66,14 @@
         <link href="assets/css/dashboard.css" rel="stylesheet" />
         <link href="assets/css/juice.css" rel="stylesheet" />
 
-    </head>
-    <body>
-        <div class="g-signin2 offscreen" data-onsuccess="onSignIn"></div>
-        <div id="loading"></div>
         <script src="assets/js/vendors/jquery-3.2.1.min.js"></script>
-        <script src="assets/plugins/bootstrap-4.1.3/popper.min.js"></script>
-        <script src="assets/plugins/bootstrap-4.1.3/js/bootstrap.min.js"></script>
-        <script src="assets/js/vendors/jquery.sparkline.min.js"></script>
-        <script src="assets/js/vendors/selectize.min.js"></script>
-        <script src="assets/js/vendors/jquery.tablesorter.min.js"></script>
-        <script src="assets/js/vendors/circle-progress.min.js"></script>
-        <script src="assets/plugins/rating/jquery.rating-stars.js"></script>
-        <script src="assets/plugins/toggle-sidebar/sidemenu.js"></script>
-        <script src="assets/plugins/Chart.js/Chart.js"></script>
-        <script src="assets/plugins/counters/counterup.min.js"></script>
-        <script src="assets/plugins/counters/waypoints.min.js"></script>
-        <script src="assets/plugins/morris/raphael-min.js"></script>
-        <script src="assets/plugins/morris/morris.js"></script>
-        <script src="assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
-        <script src="assets/plugins/jquery-sparkline/jquery.sparkline.min.js"></script>
-        <script src="assets/plugins/jqvmap/jquery.vmap.js"></script>
-        <script src="assets/plugins/jqvmap/maps/jquery.vmap.world.js"></script>
-        <script src="assets/plugins/jqvmap/jquery.vmap.sampledata.js"></script>
-        <script src="assets/js/popover.js"></script>
-        <script src="assets/plugins/notify/js/rainbow.js"></script>
-        <script src="assets/plugins/notify/js/jquery.growl.js"></script>
-        <script src="assets/js/jqvmap.js"></script>
-        <script src="assets/js/chartbundle.js"></script>
-        <script src="assets/js/velocity.min.js"></script>
-        <script src="assets/js/velocity.ui.min.js"></script>
         <script>
             // UBICACION DE LA API
             var apiURI = 'https://smart.descomplicate.com.ec/api/';
 
             $("#loading").slideDown("slow");
 
+            console.log('Construyendo interfaz');
             var formData = new FormData();
             formData.append('meth', 'construct');
             $.ajax({
@@ -121,5 +93,36 @@
                 }
             });
         </script>
+
+    </head>
+    <body>
+        <div class="g-signin2 offscreen" data-onsuccess="onSignIn"></div>
+        <div id="loading"></div>
+        <script src="assets/plugins/bootstrap-4.1.3/popper.min.js" async ></script>
+        <script src="assets/plugins/bootstrap-4.1.3/js/bootstrap.min.js" async ></script>
+        <script src="assets/js/vendors/jquery.sparkline.min.js" async ></script>
+        <script src="assets/js/vendors/selectize.min.js" async ></script>
+        <script src="assets/js/vendors/jquery.tablesorter.min.js" async ></script>
+        <script src="assets/js/vendors/circle-progress.min.js" async ></script>
+        <script src="assets/plugins/rating/jquery.rating-stars.js" async ></script>
+        <script src="assets/plugins/toggle-sidebar/sidemenu.js" async ></script>
+        <script src="assets/plugins/Chart.js/Chart.js" async ></script>
+        <script src="assets/plugins/counters/counterup.min.js" defer></script>
+        <script src="assets/plugins/counters/waypoints.min.js" async ></script>
+        <script src="assets/plugins/morris/raphael-min.js" async ></script>
+        <script src="assets/plugins/morris/morris.js" async ></script>
+        <script src="assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js" async ></script>
+        <script src="assets/plugins/jquery-sparkline/jquery.sparkline.min.js" async ></script>
+        <script src="assets/plugins/jqvmap/jquery.vmap.js" async ></script>
+        <script src="assets/plugins/jqvmap/maps/jquery.vmap.world.js" async ></script>
+        <script src="assets/plugins/jqvmap/jquery.vmap.sampledata.js" async ></script>
+        <script src="assets/js/popover.js" async ></script>
+        <script src="assets/plugins/notify/js/rainbow.js" async ></script>
+        <script src="assets/plugins/notify/js/jquery.growl.js" async ></script>
+        <script src="assets/js/jqvmap.js" async ></script>
+        <script src="assets/js/chartbundle.js" async ></script>
+        <script src="assets/js/velocity.min.js" defer ></script>
+        <script src="assets/js/velocity.ui.min.js" defer ></script>
+        <script src="assets/plugins/echart/echarts.js" defer></script>
     </body>
 </html>

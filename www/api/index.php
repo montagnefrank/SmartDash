@@ -232,7 +232,39 @@ if ($_POST || $_GET) {
         return;
     }
 
-    
+    //          GESTIONAR EL PANEL A MOSTRAR            //
+    if ($method == 'feedHome') {
+       
+        /**
+         * TOTAL REGISTRADOS DESDE LANZAMINEOT
+         * SELECT * FROM "public"."user" WHERE created_at >= '2019-11-11' and is_provider = 'f';
+         * 
+         * DOCTORES ACTIVOS EN LA PLATAFORMA 
+         * SELECT * FROM "public"."user" WHERE updated_at >= '2019-11-11' and is_provider = 't';
+         * 
+         * TOTAL DE PEDIDOS REALZIADOS EN LA PLATAFORMA
+         * SELECT * FROM "public"."des_service_doctor_historical" WHERE created_at >= '2019-11-11' AND symptom NOT ILIKE '%Prueba%';
+         * 
+         * TOTAL DE PEDIDOS ATENDIDOS
+         * SELECT * FROM "public"."des_service_doctor_historical" WHERE created_at >= '2019-11-11' AND provider_arrived = 't'  AND symptom NOT ILIKE '%Prueba%';
+         * 
+         * TOTAL DE PEDIDOS ABANDONADOS
+         * SELECT * FROM "public"."des_service_doctor_historical" WHERE created_at >= '2019-11-11' AND provider_arrived != 't' OR provider_arrived IS NULL AND symptom NOT ILIKE '%Prueba%';
+         * 
+         * TOP de SINTOMAS DE PEDIDOS
+         * SELECT symptom,"count"(symptom) total FROM "public"."des_service_doctor_historical" WHERE created_at >= '2019-11-11' AND symptom NOT ILIKE '%Prueba%' GROUP BY symptom ORDER BY total DESC
+         */
+        $result = pg_query($dbconn, 'SELECT * FROM "public"."user" ');
+        var_dump(pg_fetch_all($result));
+
+        $json['scriptResp'] = "done";
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
     //          GESTIONAR EL PANEL A MOSTRAR            //
     if ($method == 'construct') {
        

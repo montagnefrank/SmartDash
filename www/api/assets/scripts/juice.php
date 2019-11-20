@@ -94,6 +94,7 @@
 
     /** Mostramos el contenido del menu seleccionado, si no se ha seleccionado nigun menu retorna la ventana de Login */
     function showPanel(p, u) {
+        console.log('obteniendo panel');
         var userIntel = window.localStorage.getItem("userIntel");
         var jsonObj = $.parseJSON('[' + userIntel + ']');
         userIntel = jsonObj[0];
@@ -104,8 +105,9 @@
         return $.ajax({
             url: apiURI, type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
             success: function (data) {
-                if (data.scriptResp == "loaded") {console.log(data);
+                if (data.scriptResp == "loaded") {
                     $('body div.page').remove();
+                    $('body script.controller').remove();
                     $('body').attr("class", data.panelName + ' app sidebar-mini');
                     var view = populate(data.panelName, data.panel);
                     $(view).insertAfter("#loading");
@@ -117,8 +119,8 @@
                         window.localStorage.setItem("userIntel", JSON.stringify(userPanel));
                     } else {
                         showLogin();
+                        $("#loading").slideUp("slow");
                     }
-                    $("#loading").slideUp("slow");
                 }
             },
             error: function (error) {
@@ -169,24 +171,34 @@
 
     /** EL USUARIO DEPENDINEDO DE SU ROL RECIBE UN SIDEBAR DIFERENTE */
     function loadSideBar(u) {
-
-        var formData = new FormData();
-        formData.append('user', u);
-        formData.append('meth', 'showSideBar');
-        return $.ajax({
-            url: apiURI, type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
-            success: function (data) {
-                if (data.scriptResp == "loaded") {
-                    var view = populate('sideBar', data.sideb);
-                    $(view).insertBefore("#appContent");
-                    fixsb();
+        console.log('obteniendo sidebar');
+        var userData = JSON.parse(window.localStorage.getItem("userIntel"));
+        if(userData.sidebarUsuario == undefined){
+            var formData = new FormData();
+            formData.append('user', u);
+            formData.append('meth', 'showSideBar');
+            return $.ajax({
+                url: apiURI, type: 'POST', dataType: "json", cache: false, contentType: false, processData: false, data: formData,
+                success: function (data) {
+                    if (data.scriptResp == "loaded") {
+                        var view = populate('sideBar', data.sideb);
+                        $(view).insertBefore("#appContent");
+                        userData.sidebarUsuario = view;
+                        window.localStorage.setItem("userIntel", JSON.stringify(userData));
+                        fixsb();
+                        $("#loading").slideUp("slow");
+                    }
+                },
+                error: function (error) {
+                    console.log("Hubo un error de internet, intente de nuevo");
+                    console.log(error);
                 }
-            },
-            error: function (error) {
-                console.log("Hubo un error de internet, intente de nuevo");
-                console.log(error);
-            }
-        });
+            });
+        } else {
+            $(userData.sidebarUsuario).insertBefore("#appContent");
+            fixsb();
+            $("#loading").slideUp("slow");
+        }
     }
     
     /** CARGAMOS LA FUNCIONALIDAD DEL SIDEBAR YA QUE ESTAMOS LLAMANDOLO DE FORMA ASINCRONA */
