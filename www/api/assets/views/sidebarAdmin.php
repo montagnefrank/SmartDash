@@ -1,7 +1,7 @@
 <div class="app-header header py-1 d-flex">
     <div class="container-fluid">
         <div class="d-flex">
-            <a class="header-brand" href="/">
+            <a class="header-brand changePanel" data-panel="homeLogo"  href="#">
                 <img src="assets/img/logo.svg" class="header-brand-img" alt="___APPNAME___">
             </a>
             <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-toggle="sidebar" href="#"></a>
@@ -121,10 +121,10 @@
                 <li><a class="slide-item changePanel" data-panel="home" href="#"><i class="si si-speedometer"></i>&nbsp;<span>Inicio</span></a></li>
             </ul>
             <ul class="slide-menu">
-                <li><a class="slide-item changePanel" data-panel="docts" href="#"><i class="si si-user-following"></i>&nbsp;<span>Médicos Registrados</span></a></li>
+                <li><a class="slide-item changePanel" data-panel="docts" href="#"><i class="fa fa-user-md "></i>&nbsp;<span>Médicos Registrados</span></a></li>
             </ul>
             <ul class="slide-menu">
-                <li><a class="slide-item changePanel" data-panel="localdocts" href="#"><i class="si si-map"></i>&nbsp;<span>Localizar Médicos</span></a></li>
+                <li><a class="slide-item changePanel" data-panel="pedidos" href="#"><i class="si si-drawer"></i>&nbsp;<span>Pedidos</span></a></li>
             </ul>
             <ul class="slide-menu">
                 <li><a class="slide-item changePanel" data-panel="users" href="#"><i class="si si-people"></i>&nbsp;<span>Usuarios</span></a></li>

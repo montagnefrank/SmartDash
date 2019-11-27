@@ -10,6 +10,30 @@
 					</ol>
 				</div>
 
+				<div class="row waitPls">
+					<div class="col-lg-12">
+						<div class="alert alert-primary d-none d-lg-block" role="alert">
+							<button type="button" class="close text-white" data-dismiss="alert" aria-hidden="true">×</button>
+							<strong>Actualizando...</strong> <i class="fa fa-refresh fa-2x fa-spin"></i>
+						</div>
+					</div>
+				</div>
+				<div class="row ">
+					<div class="col-sm-12 col-xl-4 col-lg-12">
+						<div class="card mb-5">
+							<div class="card-body">
+								<div class="media mt-0">
+									<div class="media-body">
+										<h5 class="time-title p-0 font-weight-semibold leading-normal mb-0">Opciones</h5>
+									</div>
+									<button class="btn btn-primary d-none d-sm-block mr-2"><i class="fa fa-clock"></i> </button>
+									<button class="btn btn-info d-none d-sm-block"><i class="fa fa-phone"></i> </button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
 	</div>

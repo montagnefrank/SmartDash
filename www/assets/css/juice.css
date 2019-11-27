@@ -105,3 +105,23 @@ body.login .masthead .masthead-bg{
         url("../fonts/quicksand/Quicksand-Light.svg") format("svg");
 	
 }
+
+.waitPls {
+    position: fixed; 
+    z-index: 9999; 
+    opacity: 0.7; 
+}
+
+#mapDet {
+    height: 500px;
+}
+
+@media (max-width: 575px) {
+    .remarker span { 
+        display: none;
+    }
+}
+
+#mapDet {
+    height: 250px;
+}

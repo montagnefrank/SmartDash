@@ -1916,11 +1916,12 @@ pre code {
     margin: 0;
     padding: 0;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 10px;
 }
 .description-block>.description-text {
     text-transform: uppercase;
 	color: #a3b1c9;
+    font-size: 10px;
 }
 .socailicons .fa {
 	font-size: 70px;
@@ -3805,7 +3806,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
     top:0;
     right:0;
     bottom:0;
-    margin:0 auto;
+	margin:0 auto;
 }
 
 /*----- Custom control -----*/
@@ -15743,7 +15744,7 @@ textarea[cols] {
 }
 .search-inline .search-close {
 	position: absolute;
-	top: 21px;
+	top: 0px;
 	right: 0;
 	color: #a7b4c9;
 	width: 80px;

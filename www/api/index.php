@@ -49,12 +49,13 @@ ob_start();
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+
 require 'assets/plugins/PHPMailer/src/Exception.php';
 require 'assets/plugins/PHPMailer/src/PHPMailer.php';
 require 'assets/plugins/PHPMailer/src/SMTP.php';
 
 require 'assets/scripts/utils.php';
-require 'assets/scripts/c.php';
+require 'assets/scripts/conn.php';
 
 $json = array();
 
@@ -74,8 +75,8 @@ if ($_POST || $_GET) {
 
         ////            CONSULTAMOS EL USUARIO EN LA BASE DE DATOS A VER SI EXISTE              ////
         $query = " SELECT * "
-                . "FROM tb_usuario "
-                . "WHERE userUsuario = '" . $username . "'";
+            . "FROM tb_usuario "
+            . "WHERE userUsuario = '" . $username . "'";
         $result = $c->query($query);
         if (!$result) {
             $json['scriptResp'] = "userqueryFail";
@@ -139,7 +140,7 @@ if ($_POST || $_GET) {
         $email = $_POST['email'];
 
         $row = [];
-        $row['idUsuario'] = 'google';
+        $row['idUsuario'] = $email;
         $row['rolUsuario'] = 'Administrador';
         $row['userImg'] = $pic;
         $row['nombreUsuario'] = $fullname;
@@ -193,7 +194,7 @@ if ($_POST || $_GET) {
 
     //          RETORNAR EL MENU LATERAL AUTORIZADO PARA EL USUARIO            //
     if ($method == 'showSideBar') {
-        $user = broom('reg', $_POST["user"]);
+        $user = $_POST["user"];
 
         if ($user == 'undefined') {
             $json['scriptResp'] = "error";
@@ -202,7 +203,8 @@ if ($_POST || $_GET) {
             return;
         }
 
-        if ($user == 'google') {
+        $isGoog = explode('@', $user);
+        if ($isGoog[1]) {
             $viewSidebar = file_get_contents('assets/views/sidebarAdmin.php');
             $json['scriptResp'] = "loaded";
             $json['sideb'] = $viewSidebar;
@@ -233,42 +235,9 @@ if ($_POST || $_GET) {
     }
 
     //          GESTIONAR EL PANEL A MOSTRAR            //
-    if ($method == 'feedHome') {
-       
-        /**
-         * TOTAL REGISTRADOS DESDE LANZAMINEOT
-         * SELECT * FROM "public"."user" WHERE created_at >= '2019-11-11' and is_provider = 'f';
-         * 
-         * DOCTORES ACTIVOS EN LA PLATAFORMA 
-         * SELECT * FROM "public"."user" WHERE updated_at >= '2019-11-11' and is_provider = 't';
-         * 
-         * TOTAL DE PEDIDOS REALZIADOS EN LA PLATAFORMA
-         * SELECT * FROM "public"."des_service_doctor_historical" WHERE created_at >= '2019-11-11' AND symptom NOT ILIKE '%Prueba%';
-         * 
-         * TOTAL DE PEDIDOS ATENDIDOS
-         * SELECT * FROM "public"."des_service_doctor_historical" WHERE created_at >= '2019-11-11' AND provider_arrived = 't'  AND symptom NOT ILIKE '%Prueba%';
-         * 
-         * TOTAL DE PEDIDOS ABANDONADOS
-         * SELECT * FROM "public"."des_service_doctor_historical" WHERE created_at >= '2019-11-11' AND provider_arrived != 't' OR provider_arrived IS NULL AND symptom NOT ILIKE '%Prueba%';
-         * 
-         * TOP de SINTOMAS DE PEDIDOS
-         * SELECT symptom,"count"(symptom) total FROM "public"."des_service_doctor_historical" WHERE created_at >= '2019-11-11' AND symptom NOT ILIKE '%Prueba%' GROUP BY symptom ORDER BY total DESC
-         */
-        $result = pg_query($dbconn, 'SELECT * FROM "public"."user" ');
-        var_dump(pg_fetch_all($result));
-
-        $json['scriptResp'] = "done";
-        $output = ob_get_contents();
-        ob_end_clean();
-        $json['output'] = $output;
-        echo json_encode($json);
-        return;
-    }
-
-    //          GESTIONAR EL PANEL A MOSTRAR            //
     if ($method == 'construct') {
-       
-        $getJuice = file_get_contents('assets/scripts/juice.php');        
+
+        $getJuice = file_get_contents('assets/scripts/juice.php');
         $video = getBGVideo();
 
         $json['scriptResp'] = "done";
@@ -282,17 +251,197 @@ if ($_POST || $_GET) {
         return;
     }
 
+    //          ALIMENTAR LOS INDICADORES            //
+    if ($method == 'feedHome') {
+
+        // TOTAL REGISTRADOS DESDE LANZAMINEOT //
+        $query = "SELECT * FROM public.user WHERE created_at >= '2019-11-11' and is_provider = 'f'";
+        $result = pg_query($dbconn, $query);
+        $treg = pg_fetch_all($result);
+
+        // DOCTORES CREADOS EN LA PLATAFORMA //
+        $query = "SELECT * FROM public.user WHERE created_at >= '2019-11-11' and is_provider = 't'";
+        $result = pg_query($dbconn, $query);
+        $tdocn = pg_fetch_all($result);
+
+        // DOCTORES ACTIVOS EN LA PLATAFORMA //
+        $query = "SELECT * FROM public.user WHERE updated_at >= '2019-11-11' and is_provider = 't'";
+        $result = pg_query($dbconn, $query);
+        $tdoc = pg_fetch_all($result);
+
+        // TOTAL DE PEDIDOS REALZIADOS EN LA PLATAFORMA //
+        $query = "SELECT * FROM public.des_service_doctor_historical WHERE (created_at >= '2019-11-11') AND (symptom NOT ILIKE '%prueba%' OR symptom IS NULL)";
+        $result = pg_query($dbconn, $query);
+        $tped = pg_fetch_all($result);
+
+        // TOTAL DE PEDIDOS ATENDIDOS //
+        $query = "SELECT * FROM public.des_service_doctor_historical WHERE (created_at >= '2019-11-11' AND provider_arrived = 't')  AND (symptom NOT ILIKE '%prueba%' OR symptom IS NULL)";
+        $result = pg_query($dbconn, $query);
+        $tpeda = pg_fetch_all($result);
+
+        // TOTAL DE PEDIDOS ABANDONADOS //
+        $query = "SELECT * FROM public.des_service_doctor_historical WHERE (created_at >= '2019-11-11' AND provider_arrived != 't' OR provider_arrived IS NULL) AND (symptom NOT ILIKE '%Prueba%' OR symptom IS NULL)";
+        $result = pg_query($dbconn, $query);
+        $tpedab = pg_fetch_all($result);
+
+        // TOP de SINTOMAS DE PEDIDOS //
+        $query = "SELECT symptom,count(symptom) total FROM public.des_service_doctor_historical WHERE created_at >= '2019-11-11' AND symptom NOT ILIKE '%Prueba%' GROUP BY symptom ORDER BY total DESC";
+        $result = pg_query($dbconn, $query);
+        $tsym = pg_fetch_all($result);
+
+        $json['scriptResp'] = "done";
+        $json['treg'] = $treg;
+        $json['tdoc'] = $tdoc;
+        $json['tdocn'] = $tdocn;
+        $json['tped'] = $tped;
+        $json['tpeda'] = $tpeda;
+        $json['tpedab'] = $tpedab;
+        $json['tsym'] = $tsym;
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //          ALIMENTAR LOS DOCTORES            //
+    if ($method == 'feedDoct') {
+        $apiuri = $_POST['apiuri'];
+
+        // DOCTORES ACTIVOS EN LA PLATAFORMA //
+        $query = "SELECT * FROM public.user WHERE updated_at >= '2019-11-11' and is_provider = 't' ORDER BY updated_at DESC";
+        $result = pg_query($dbconn, $query);
+        $tdoc = pg_fetch_all($result);
+
+        $htmlDocs = '<div class="row">';
+        foreach ($tdoc as $doctor) {
+            $htmlDocs .= ' 
+				<div class="col-md-4 anim">
+                    <div class="card user-wideget user-wideget-widget widget-user">
+                        <div class="widget-user-header bg-cyan">
+                            <h5 class="">' . $doctor['first_name'] . ' ' . $doctor['last_name'] . '</h5>
+                            <h5 class="widget-user-desc">' . $doctor['email'] . '</h5>
+                        </div>
+                        <div class="widget-user-image">
+                            <img src="' . $apiuri . "assets/img/doctor.jpg" . '" class="brround" alt="User Avatar">
+                        </div>
+                        <div class="user-wideget-footer">
+                            <div class="row">
+                                <div class="col-sm-4 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">' . $doctor['identification_card'] . '</h5>
+                                        <span class="description-text">ID</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4 border-right">
+                                    <div class="description-block">
+                                        <h5 class="description-header">' . substr($doctor['updated_at'], 0, 10) . '</h5>
+                                        <span class="description-text">Ult. Conex.</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="description-block">
+                                        <h5 class="description-header">' . $doctor['cell_phone_number'] . '</h5>
+                                        <span class="description-text">Telefono</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ';
+        }
+        $htmlDocs .= '</div>';
+
+        $json['scriptResp'] = "done";
+        $json['tdoc'] = $tdoc;
+        $json['html'] = $htmlDocs;
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //          ALIMENTAR LOS PEDIDOS            //
+    if ($method == 'feedPed') {
+        $apiuri = $_POST['apiuri'];
+
+        // TOTAL DE PEDIDOS REALZIADOS EN LA PLATAFORMA //
+        $query = "  SELECT us.first_name nomb, us.last_name apel, us.cell_phone_number cel, dsdh.email_client email, dsdh.provider_arrived arri, dsdh.created_at creado, dsdh.forma_pago forma, latitude_client lat, longitude_client long, address_client addr, address_reference refe, symptom symp, score sco, identification_card cedu
+                    FROM public.des_service_doctor_historical dsdh 
+                    JOIN \"user\" us ON (dsdh.email_client = us.email) 
+                    WHERE (dsdh.created_at >= '2019-11-11') AND (symptom NOT ILIKE '%prueba%' OR symptom IS NULL)
+                    ORDER BY servdoctorhis_id DESC";
+        $result = pg_query($dbconn, $query);
+        $tped = pg_fetch_all($result);
+
+        $htmlPeds = '';
+        foreach ($tped as $pedido) {
+            if($pedido['arri'] == 't'){
+                $resp = 'Si <i class="fa fa-smile-o fa-2x"></i>';
+            } else {
+                $resp = 'No <i class="fa fa-frown-o fa-2x"></i>';
+            }
+            $htmlPeds .= ' 
+                            <tr>
+                                <td>' . $pedido['nomb'] . ' ' . $pedido['apel'] . '</td> 
+                                <td>' . $pedido['cel'] . '</td>
+                                <td>' . $resp . '</td>
+                                <td>' . substr($pedido['creado'], 0, 10) . '</td>
+                                <td>' . substr($pedido['creado'], 11, 8) . '</td>
+                                <td>' . $pedido['forma'] . '</td>
+                                <td>
+                                    <a  class="text-white btn btn-primary verDetallesPedido" >
+                                        <i class="fa fa-share-square-o"></i> Ver
+                                    </a>
+                                    <div class="offscreen detNomb">' . $pedido['nomb'] . '</div>
+                                    <div class="offscreen detApel">' . $pedido['apel'] . '</div>
+                                    <div class="offscreen detCel">' . $pedido['cel'] . '</div>
+                                    <div class="offscreen detEmail">' . $pedido['email'] . '</div>
+                                    <div class="offscreen detArri">' . $pedido['arri'] . '</div>
+                                    <div class="offscreen detCreado">' . $pedido['creado'] . '</div>
+                                    <div class="offscreen detForma">' . $pedido['forma'] . '</div>
+                                    <div class="offscreen detLat">' . $pedido['lat'] . '</div>
+                                    <div class="offscreen detLong">' . $pedido['long'] . '</div>
+                                    <div class="offscreen detAddr">' . $pedido['addr'] . '</div>
+                                    <div class="offscreen detRefe">' . $pedido['refe'] . '</div>
+                                    <div class="offscreen detSymp">' . $pedido['symp'] . '</div>
+                                    <div class="offscreen detSco">' . $pedido['sco'] . '</div>
+                                    <div class="offscreen detCedu">' . $pedido['cedu'] . '</div>
+                                </td>
+                            </tr>
+            ';
+        }
+
+        $json['scriptResp'] = "done";
+        $json['tped'] = $tped;
+        $json['html'] = $htmlPeds;
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+
+    //          DEBUG           //
+    if ($method == 'debug') {
+        $output = ob_get_contents();
+        $json['descomplicate'] = hash('sha512', 'descomplicate');;
+        $json['output'] = $output;
+        ob_end_clean();
+        echo json_encode($json);
+        return;
+    }
 }
 
 
 //   Si no se llamó ningún método de la API     //
-var_dump($_POST);
-var_dump($_GET);
-var_dump($_FILES);
-$output = ob_get_contents();
+$json['post'] = json_encode($_POST);
+$json['get'] = json_encode($_GET);
+$json['files'] = json_encode($_FILES);
 $json['msg'] = "Mute API";
 $json['output'] = $output;
 ob_end_clean();
 echo json_encode($json);
 return;
-?>
