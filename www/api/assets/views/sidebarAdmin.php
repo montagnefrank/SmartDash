@@ -12,7 +12,7 @@
                     </a>
                     <div class="search-inline">
                         <form>
-                            <input type="text" class="form-control" placeholder="Ingrese el valor a buscar...">
+                            <input type="text" class="form-control" placeholder="Ingrese el valor a buscar... " id="navbarSearch">
                             <button type="submit">
                                 <i class="fa fa-search"></i>
                             </button>

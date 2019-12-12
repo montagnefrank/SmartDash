@@ -45,7 +45,6 @@
                     }
                 },
                 error: function(error) {
-                    $('body').append('<center>revise su conexion</center>');
                     console.log("Hubo un error de internet, intente de nuevo");
                     console.log(error);
                 }
@@ -55,7 +54,9 @@
         /*           FILTROS DE MAPA DE CALOR               */
         $(document).off('click', "#filterMedic");
         $(document).on('click', '#filterMedic', function(e) {
+
             for (var i = 0; i < tdocMarker.length; i++) {
+                tdocMarker[i].setAnimation(google.maps.Animation.DROP);
                 tdocMarker[i].setMap(mapHome);
             }
             for (var i = 0; i < tregMarker.length; i++) {
@@ -68,6 +69,7 @@
         $(document).off('click', "#filterClient");
         $(document).on('click', '#filterClient', function(e) {
             for (var i = 0; i < tregMarker.length; i++) {
+                tregMarker[i].setAnimation(google.maps.Animation.DROP);
                 tregMarker[i].setMap(mapHome);
             }
             for (var i = 0; i < tdocMarker.length; i++) {
@@ -80,6 +82,7 @@
         $(document).off('click', "#filterPed");
         $(document).on('click', '#filterPed', function(e) {
             for (var i = 0; i < tpedMarker.length; i++) {
+                tpedMarker[i].setAnimation(google.maps.Animation.DROP);
                 tpedMarker[i].setMap(mapHome);
             }
             for (var i = 0; i < tregMarker.length; i++) {
@@ -92,12 +95,15 @@
         $(document).off('click', "#filterAll");
         $(document).on('click', '#filterAll', function(e) {
             for (var i = 0; i < tregMarker.length; i++) {
+                tregMarker[i].setAnimation(google.maps.Animation.DROP);
                 tregMarker[i].setMap(mapHome);
             }
             for (var i = 0; i < tdocMarker.length; i++) {
+                tdocMarker[i].setAnimation(google.maps.Animation.DROP);
                 tdocMarker[i].setMap(mapHome);
             }
             for (var i = 0; i < tpedMarker.length; i++) {
+                tpedMarker[i].setAnimation(google.maps.Animation.DROP);
                 tpedMarker[i].setMap(mapHome);
             }
         });
@@ -152,7 +158,6 @@
                 }
             },
             error: function(error) {
-                $('body').append('<center>revise su conexion</center>');
                 console.log("Hubo un error de internet, intente de nuevo");
                 console.log(error);
             }
@@ -325,10 +330,17 @@
             if (m < 10) {
                 m = '0' + m;
             }
+            if (m == 11) {
+                if (d == 31) {
+                    d = '01';
+                    m = '12';
+                }
+            }
             thisday = m + '-' + d;
             arr.push(thisday);
             dt.setDate(dt.getDate() + 1);
         }
+
         return arr;
     }
 

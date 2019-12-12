@@ -31,8 +31,8 @@
  */
 
 //  DEBUG EN PANTALLA   //
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 
 //  HABILITAMOS EL ACCESO PUBLICO PARA REALIZAR LLAMADAS AJAX DESDE DOMINIOS PUBLICOS   /
 header('Access-Control-Allow-Origin: *');
@@ -313,8 +313,15 @@ if ($_POST || $_GET) {
         $result = pg_query($dbconn, $query);
         $tdoc = pg_fetch_all($result);
 
-        $htmlDocs = '<div class="row">';
+        $htmlDocs = '<div class="row doctorsFetchedList">';
         foreach ($tdoc as $doctor) {
+            //   VERIFICAMOS SI TIENE IMAGEN CARGADA || CARGAMOS IMAGEN PREDETERMINADA        //
+            $isavatar = "assets/img/doc/" . $doctor['identification_card'] . ".JPG";
+            if (file_exists($isavatar)) {
+                $avatar = $apiuri . 'assets/img/doc/' . $doctor['identification_card'] . '.JPG';
+            } else {
+                $avatar =  $apiuri . "assets/img/doctor.jpg";
+            }
             $htmlDocs .= ' 
 				<div class="col-md-4 anim">
                     <div class="card user-wideget user-wideget-widget widget-user">
@@ -323,7 +330,7 @@ if ($_POST || $_GET) {
                             <h5 class="widget-user-desc">' . $doctor['email'] . '</h5>
                         </div>
                         <div class="widget-user-image">
-                            <img src="' . $apiuri . "assets/img/doctor.jpg" . '" class="brround" alt="User Avatar">
+                            <img src="' . $avatar . '" class=" drImg" alt="User Avatar">
                         </div>
                         <div class="user-wideget-footer">
                             <div class="row">
@@ -335,7 +342,7 @@ if ($_POST || $_GET) {
                                 </div>
                                 <div class="col-sm-4 border-right">
                                     <div class="description-block">
-                                        <h5 class="description-header">' . substr($doctor['updated_at'], 0, 10) . '</h5>
+                                        <h5 class="description-header thisDoctLastCon">' . substr($doctor['updated_at'], 0, 10) . '</h5>
                                         <span class="description-text">Ult. Conex.</span>
                                     </div>
                                 </div>
@@ -368,9 +375,13 @@ if ($_POST || $_GET) {
         $apiuri = $_POST['apiuri'];
 
         // TOTAL DE PEDIDOS REALZIADOS EN LA PLATAFORMA //
-        $query = "  SELECT us.first_name nomb, us.last_name apel, us.cell_phone_number cel, dsdh.email_client email, dsdh.provider_arrived arri, dsdh.created_at creado, dsdh.forma_pago forma, latitude_client lat, longitude_client long, address_client addr, address_reference refe, symptom symp, score sco, identification_card cedu
+        $query = "  SELECT us.first_name nomb, us.last_name apel, us.cell_phone_number cel, dsdh.email_client email, dsdh.provider_arrived 
+                        arri, dsdh.created_at creado, dsdh.forma_pago forma, latitude_client lat, longitude_client long, address_client addr, 
+                        address_reference refe, symptom symp, score sco, us.identification_card cedu, usi.first_name nombdoc, usi.last_name 
+                        apeldoc, dsdh.email_provider emaildoc
                     FROM public.des_service_doctor_historical dsdh 
-                    JOIN \"user\" us ON (dsdh.email_client = us.email) 
+                    LEFT JOIN \"user\" us ON (dsdh.email_client = us.email) 
+                    LEFT JOIN \"user\" usi ON (dsdh.email_provider = usi.email) 
                     WHERE (dsdh.created_at >= '2019-11-11') AND (symptom NOT ILIKE '%prueba%' OR symptom IS NULL)
                     ORDER BY servdoctorhis_id DESC";
         $result = pg_query($dbconn, $query);
@@ -378,10 +389,10 @@ if ($_POST || $_GET) {
 
         $htmlPeds = '';
         foreach ($tped as $pedido) {
-            if($pedido['arri'] == 't'){
-                $resp = 'Si <i class="fa fa-smile-o fa-2x"></i>';
+            if ($pedido['arri'] == 't') {
+                $resp = 'Atendido <i class="fa fa-smile-o fa-2x"></i>';
             } else {
-                $resp = 'No <i class="fa fa-frown-o fa-2x"></i>';
+                $resp = 'Sin Atender <i class="fa fa-frown-o fa-2x"></i>';
             }
             $htmlPeds .= ' 
                             <tr>
@@ -393,22 +404,25 @@ if ($_POST || $_GET) {
                                 <td>' . $pedido['forma'] . '</td>
                                 <td>
                                     <a  class="text-white btn btn-primary verDetallesPedido" >
-                                        <i class="fa fa-share-square-o"></i> Ver
+                                        <i class="fa fa-share-square-o vericon"></i><span>Ver</span>
+                                        <div class="offscreen detNomb">' . $pedido['nomb'] . '</div>
+                                        <div class="offscreen detApel">' . $pedido['apel'] . '</div>
+                                        <div class="offscreen detCel">' . $pedido['cel'] . '</div>
+                                        <div class="offscreen detEmail">' . $pedido['email'] . '</div>
+                                        <div class="offscreen detArri">' . $resp . '</div>
+                                        <div class="offscreen detCreado">' . $pedido['creado'] . '</div>
+                                        <div class="offscreen detForma">' . $pedido['forma'] . '</div>
+                                        <div class="offscreen detLat">' . $pedido['lat'] . '</div>
+                                        <div class="offscreen detLong">' . $pedido['long'] . '</div>
+                                        <div class="offscreen detAddr">' . $pedido['addr'] . '</div>
+                                        <div class="offscreen detRefe">' . $pedido['refe'] . '</div>
+                                        <div class="offscreen detSymp">' . $pedido['symp'] . '</div>
+                                        <div class="offscreen detSco">' . $pedido['sco'] . '</div>
+                                        <div class="offscreen detCedu">' . $pedido['cedu'] . '</div>
+                                        <div class="offscreen detNombDoc">' . $pedido['nombdoc'] . '</div>
+                                        <div class="offscreen detApelDoc">' . $pedido['apeldoc'] . '</div>
+                                        <div class="offscreen detEmailDoc">' . $pedido['emaildoc'] . '</div>
                                     </a>
-                                    <div class="offscreen detNomb">' . $pedido['nomb'] . '</div>
-                                    <div class="offscreen detApel">' . $pedido['apel'] . '</div>
-                                    <div class="offscreen detCel">' . $pedido['cel'] . '</div>
-                                    <div class="offscreen detEmail">' . $pedido['email'] . '</div>
-                                    <div class="offscreen detArri">' . $pedido['arri'] . '</div>
-                                    <div class="offscreen detCreado">' . $pedido['creado'] . '</div>
-                                    <div class="offscreen detForma">' . $pedido['forma'] . '</div>
-                                    <div class="offscreen detLat">' . $pedido['lat'] . '</div>
-                                    <div class="offscreen detLong">' . $pedido['long'] . '</div>
-                                    <div class="offscreen detAddr">' . $pedido['addr'] . '</div>
-                                    <div class="offscreen detRefe">' . $pedido['refe'] . '</div>
-                                    <div class="offscreen detSymp">' . $pedido['symp'] . '</div>
-                                    <div class="offscreen detSco">' . $pedido['sco'] . '</div>
-                                    <div class="offscreen detCedu">' . $pedido['cedu'] . '</div>
                                 </td>
                             </tr>
             ';
@@ -433,8 +447,45 @@ if ($_POST || $_GET) {
         echo json_encode($json);
         return;
     }
-}
 
+    //          REPORT           //
+    if ($method == 'report') {
+        $apiuri = $_POST['apiuri'];
+
+        // DOCTORES ACTIVOS EN LA PLATAFORMA //
+        $query = "SELECT * FROM public.user WHERE created_at >= '2019-11-11' and is_provider = 'f'";
+        $result = pg_query($dbconn, $query);
+        $treg = pg_fetch_all($result);
+        $num_fields = count($treg);
+
+        $headers = array('Nombre', 'Apellido', 'Email', 'Creado en', 'Telefono');
+
+        $fp = fopen('php://output', 'w');
+        if ($fp && $result) {
+            fputcsv($fp, $headers, ';');
+            foreach ($treg as $userReg) {
+                $row = [];
+                $row[] = $userReg['first_name'];
+                $row[] = $userReg['last_name'];
+                $row[] = $userReg['email'];
+                $row[] = $userReg['created_at'];
+                $row[] = $userReg['cell_phone_number'];
+                fputcsv($fp, $row, ';');
+            }
+            header('Content-Type: text/csv; charset=utf-8');
+            header("Content-Disposition: attachment; filename=usuariosregistrados" . date('Ymd-His') . ".csv");
+            return;
+        }
+
+        $json['scriptResp'] = "done";
+        $json['tdoc'] = count($treg);
+        $output = ob_get_contents();
+        ob_end_clean();
+        $json['output'] = $output;
+        echo json_encode($json);
+        return;
+    }
+}
 
 //   Si no se llamó ningún método de la API     //
 $json['post'] = json_encode($_POST);

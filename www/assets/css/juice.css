@@ -112,7 +112,7 @@ body.login .masthead .masthead-bg{
     opacity: 0.7; 
 }
 
-#mapDet {
+#mapShow {
     height: 500px;
 }
 
@@ -124,4 +124,17 @@ body.login .masthead .masthead-bg{
 
 #mapDet {
     height: 250px;
+}
+
+.widget-user-image {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+}
+.drImg {
+  display: inline;
+  margin: 0 auto;
+  border: 0px!important;
 }

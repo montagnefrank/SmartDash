@@ -8,7 +8,7 @@
                     <h4 class="page-title">Gestionar usuarios de la plataforma</h4>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="#">___APPNAME___</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+                        <li class="breadcrumb-item active" aria-current="page"><a target="_blank" href="___APIURI___?meth=report">Usuarios</a></li>
                     </ol>
                 </div>
 

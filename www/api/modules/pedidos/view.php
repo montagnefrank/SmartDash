@@ -23,8 +23,8 @@
                         <div class="card-header">
                             <h3 class="card-title"><i class="fa fa-medkit" aria-hidden="true"></i> Detalles del Pedido.</h3>
                             <div class="card-options">
-                                <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-                                <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+                                <a href="#" class="card-options-collapse returntoList" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                <a href="#" class="card-options-remove returntoList" data-toggle="card-remove"><i class="fe fe-x"></i></a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -32,20 +32,20 @@
                                 <div class="col-md-4">
                                     <div class="card overflow-hidden">
                                         <div class="card-header">
-                                            <h3 class="card-title">Nombre</h3>
+                                            <h3 class="card-title" id="detNombCont">Nombre</h3>
                                             <div class="card-options">
                                                 <a class="btn btn-sm btn-primary" href="#"><i class="fa fa-user"></i></a>
                                             </div>
                                         </div>
                                         <div class="card-body ">
 
-                                            <small class="h6">cedu</small>
-                                            <div class="text-dark count mt-0 font-30">Telefono</div>
+                                            <small class="h6" id="detCeduCont">cedu</small>
+                                            <div class="text-dark count mt-0 font-30"  id="detPhoneCont">Telefono</div>
 
                                             <div class="progress progress-sm mt-0 mb-2">
                                                 <div class="progress-bar bg-success w-100" role="progressbar"></div>
                                             </div>
-                                            <div class=""><i class="fa fa-caret-up text-green"></i> Email</div>
+                                            <div class="" id="detEmailCont"><i class="fa fa-caret-up text-green"  ></i> Email</div>
                                         </div>
                                     </div>
                                 </div>
@@ -58,12 +58,12 @@
                                             </div>
                                         </div>
                                         <div class="card-body ">
-                                            <small class="h6">Direccion</small>
-                                            <div class="text-dark count mt-0 font-30">Referencia</div>
+                                            <small class="h6"  id="detAddrCont">Direccion</small>
+                                            <div class="text-dark count mt-0 font-30"  id="detRefeCont">Referencia</div>
                                             <div class="progress progress-sm mt-0 mb-2">
                                                 <div class="progress-bar bg-primary w-100" role="progressbar"></div>
                                             </div>
-                                            <div class=""><i class="fa fa-caret-up text-blue"></i> Fecha</div>
+                                            <div class="" id="detFechaCont"><i class="fa fa-caret-up text-blue" ></i> Fecha</div>
                                         </div>
                                     </div>
                                 </div>
@@ -77,13 +77,13 @@
                                         </div>
                                         <div class="card-body ">
 
-                                            <small class="h6">Sintoma</small>
-                                            <div class="text-dark count mt-0 font-30">Atendido</div>
+                                            <small class="h6"  id="detArriCont">Sintoma</small>
+                                            <div class="text-dark count mt-0 font-30"  id="detSympCont">Atendido</div>
 
                                             <div class="progress progress-sm mt-0 mb-2">
                                                 <div class="progress-bar bg-danger w-100" role="progressbar"></div>
                                             </div>
-                                            <div class=""><i class="fa fa-caret-up text-danger"></i> score</div>
+                                            <div class="" id="detScorCont"><i class="fa fa-caret-up text-danger"  ></i> score</div>
                                         </div>
                                     </div>
                                 </div>
@@ -93,8 +93,8 @@
                                     <div class="card-header">
                                         <h3 class="card-title"><i class="si si-location-pin"></i> Ubicación</h3>
                                         <div class="card-options">
-                                            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-                                            <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+                                            <a href="#" class="card-options-collapse returntoList" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                            <a href="#" class="card-options-remove returntoList" data-toggle="card-remove"><i class="fe fe-x"></i></a>
                                         </div>
                                     </div>
                                     <div class="card-body">

@@ -4,6 +4,7 @@
 			<div class="side-app">
 				<div class="page-header">
 					<h4 class="page-title">Doctores Registrados en la App</h4>
+					<a id="updateDocs" class="btn btn-outline-primary btn-pill "><i class="fa fa-refresh"></i></a>
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item"><a href="#">___APPNAME___</a></li>
 						<li class="breadcrumb-item active" aria-current="page">Doctores</li>
@@ -19,15 +20,17 @@
 					</div>
 				</div>
 				<div class="row ">
-					<div class="col-sm-12 col-xl-4 col-lg-12">
+					<div class="col-md-9">
 						<div class="card mb-5">
+							<div class="card-header">
+								<h5 class="time-title p-0 font-weight-semibold leading-normal mb-0"><strong>Opciones:</strong></h5>
+							</div>
 							<div class="card-body">
 								<div class="media mt-0">
 									<div class="media-body">
-										<h5 class="time-title p-0 font-weight-semibold leading-normal mb-0">Opciones</h5>
+										&nbsp;<button class="btn btn-primary " id="doctCon"><i class="fa fa-clock-o"></i> Conectados</button>&nbsp;
+										&nbsp;<button class="btn btn-info " id="doctIn"><i class="fa fa-power-off"></i> Inactivos</button>&nbsp;
 									</div>
-									<button class="btn btn-primary d-none d-sm-block mr-2"><i class="fa fa-clock"></i> </button>
-									<button class="btn btn-info d-none d-sm-block"><i class="fa fa-phone"></i> </button>
 								</div>
 							</div>
 						</div>
