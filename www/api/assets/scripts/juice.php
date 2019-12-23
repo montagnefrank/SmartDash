@@ -410,4 +410,28 @@
             }
         });
     }
+
+    /** RESUMIMOS LAS LLAMADAS A LA API EN UNA MISMA FUNCION */
+    function apiCall(data, onSuccess) {
+        $.ajax({
+            url: apiURI,
+            type: 'POST',
+            dataType: "json",
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: data,
+            success: function(data) {
+                if (data.scriptResp == "done") {
+                    onSuccess(data);
+                } else {
+                    console.log('hubo un error en al respuesta.');
+                }
+            },
+            error: function(error) {
+                console.log("Hubo un error de internet, no hubo respuesta de la API");
+                console.log(error);
+            }
+        });
+    }
 </script>

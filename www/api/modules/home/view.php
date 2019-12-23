@@ -25,6 +25,10 @@
                                 <div class="card-header">
                                     <h3 class="card-title"><i class="si si-rocket"></i> Historico de envolvimiento</h3>
                                     <div class="card-options">
+                                        <a  class="btn btn-primary donwloadCsvReport text-white">
+                                            <i class="fa fa-cloud-download" aria-hidden="true"></i>
+                                            <div class="offscreen reportContainer hdeReportContainer"></div>
+                                        </a>
                                         <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
                                         <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
                                     </div>
@@ -49,6 +53,10 @@
                                 <div class="card-header">
                                     <div class="card-title"><i class="si si-pie-chart"></i> Top Sintomas</div>
                                     <div class="card-options">
+                                        <a class="btn btn-primary donwloadCsvReport">
+                                            <i class="fa fa-cloud-download text-white" aria-hidden="true"></i>
+                                            <div class="offscreen reportContainer symReportContainer"></div>
+                                        </a>
                                         <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
                                         <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
                                     </div>
@@ -180,6 +188,20 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
+                                <h3 class="card-title">Tipos de pedidos</h3>
+                                <div class="card-options">
+                                    <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                                    <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="pedidosPagaCont" class="chartsh"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
                                 <h3 class="card-title"><i class="si si-location-pin"></i> Mapa de Calor</h3>
                                 <div class="card-options">
                                     <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
@@ -191,10 +213,10 @@
                             </div>
                             <div class="card-footer">
                                 <h3 class="card-title"> Filtrar por: </h3>
-                                &nbsp;<a  class="text-white btn btn-primary remarker" id="filterMedic"><i class="fa fa-user-md fa-2x"></i> <span>Médicos</span> </a>&nbsp;
-                                &nbsp;<a  class="text-white btn btn-info remarker" id="filterClient"><i class="fa fa-user fa-2x"></i> <span>Clientes</span></a>&nbsp;
-                                &nbsp;<a  class="text-white btn btn-success remarker" id="filterPed"><i class="fa fa-check fa-2x"></i> <span>Pedidos</span></a>&nbsp;
-                                &nbsp;<a  class="text-white btn btn-secondary remarker" id="filterAll"><i class="fa fa-users fa-2x"></i> <span>Todos</span></a>&nbsp;
+                                &nbsp;<a class="text-white btn btn-primary remarker" id="filterMedic"><i class="fa fa-user-md fa-2x"></i> <span>Médicos</span> </a>&nbsp;
+                                &nbsp;<a class="text-white btn btn-info remarker" id="filterClient"><i class="fa fa-user fa-2x"></i> <span>Clientes</span></a>&nbsp;
+                                &nbsp;<a class="text-white btn btn-success remarker" id="filterPed"><i class="fa fa-check fa-2x"></i> <span>Pedidos</span></a>&nbsp;
+                                &nbsp;<a class="text-white btn btn-secondary remarker" id="filterAll"><i class="fa fa-users fa-2x"></i> <span>Todos</span></a>&nbsp;
                                 <div class="offscreen" id="dataMap_obj"></div>
                             </div>
                         </div>

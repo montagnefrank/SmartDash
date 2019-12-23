@@ -51,6 +51,24 @@
             });
         });
 
+        /*           DESCARGAR REPORTES               */
+        $(document).off('click', ".donwloadCsvReport");
+        $(document).on('click', '.donwloadCsvReport', function(e) {
+
+            $('.waitPls').velocity("transition.slideUpIn");
+
+            var formData = new FormData(),
+                reportData;
+            reportData = $(this).find('.reportContainer').html();
+            formData.append('meth', 'newCSV');
+            formData.append('data', reportData);
+            apiCall(formData, function(data) {
+                $('.waitPls').velocity("transition.slideUpOut");
+                window.open(apiURI + data.enlace, "_blank");
+            });
+
+        });
+
         /*           FILTROS DE MAPA DE CALOR               */
         $(document).off('click', "#filterMedic");
         $(document).on('click', '#filterMedic', function(e) {
@@ -152,6 +170,7 @@
                     }, 3000);
                     setTimeout(function() {
                         initMap(data);
+                        buildPedTypes(data);
                     }, 4000);
                 } else {
                     console.log('hubo un error #642356');
@@ -301,7 +320,7 @@
     }
 
     // CREAR ARREGLO DE FECHAS DIA POR DIA
-    function getDateArray() {
+    function getDateArray(type = 'normal') {
         // CREAMOS EL RANGO DE FECHAS QUE SE MOSTRARA EN EL GRAFICO
         var startDate = new Date("2019-11-11");
         var today = new Date(),
@@ -336,7 +355,17 @@
                     m = '12';
                 }
             }
-            thisday = m + '-' + d;
+            if (m == 12) {
+                if (d == 32) {
+                    d = '01';
+                    m = '01';
+                }
+            }
+            if (type == 'normal') {
+                thisday = m + '-' + d;
+            } else {
+                thisday = y + '-' + m + '-' + d;
+            }
             arr.push(thisday);
             dt.setDate(dt.getDate() + 1);
         }
@@ -352,35 +381,46 @@
         for (var i = 0; i < dateArr.length; i++) {
             chartDates.push(dateArr[i]);
         }
+
+        var dateArr2 = getDateArray('full');
+        dateArr2.splice(-1, 1);
+        var chartDates2 = [];
+        for (var i = 0; i < dateArr2.length; i++) {
+            chartDates2.push(dateArr2[i]);
+        }
         //var tot = chartDates.length;
         //var reme = +tot - 7;
         //chartDates.splice(0, reme); // CONTENEDOR DEL RANGO ULTIMOS 7 DIAS
 
-        // OBTENEMOS LOS NUEVOS CLIENTES POR DIA
-        var tregDays = [];
+        // OBTENEMOS LOS NUEVOS CLIENTES POR DIA Y NUEVOS PEDIDOS
+        var tregDays = [],
+            tpedDays = [],
+            hdeReport = {
+                title: 'ReporteDeEnvolvimiento',
+                headers: 'Fecha, Descargas, Pedidos',
+                dataCont: []
+            };
         for (var i = 0; i < chartDates.length; i++) {
-            var counter = 0;
+            var counter = 0,
+                counter1 = 0;
             for (var ii = 0; ii < data.treg.length; ii++) {
                 var created = data.treg[ii].created_at.substring(5, 10);
                 if (chartDates[i] == created) {
                     counter++;
                 }
             }
-            tregDays.push(counter);
-        }
-
-        // OBTENEMOS LOS PEDIDOS  POR DIA
-        var tpedDays = [];
-        for (var i = 0; i < chartDates.length; i++) {
-            var counter = 0;
             for (var ii = 0; ii < data.tped.length; ii++) {
                 var created = data.tped[ii].created_at.substring(5, 10);
                 if (chartDates[i] == created) {
-                    counter++;
+                    counter1++;
                 }
             }
-            tpedDays.push(counter);
+            tpedDays.push(counter1);
+            tregDays.push(counter);
+            hdeReport.dataCont.push(chartDates2[i] + ',' + counter + ',' + counter1);
         }
+
+        $('.hdeReportContainer').html(JSON.stringify(hdeReport));
 
         var chart = document.getElementById('activacioChart');
         var barChart = echarts.init(chart);
@@ -489,17 +529,26 @@
         }
 
         var tsymtotal = [];
+        var symReport = {
+            title: 'ReporteDeSintomas',
+            headers: 'Sintoma, Recurrencias',
+            dataCont: []
+        };
+
         for (var i = 0; i < data.tsym.length; i++) {
             var cont = {};
             cont.label = data.tsym[i].symptom.substring(0, 15);
-            cont.labelfull = data.tsym[i].symptom;
+            cont.labelfull = data.tsym[i].symptom.replace(';', ' ');
             cont.value = (+data.tsym[i].total * 100) / +contot;
             cont.value = cont.value.toFixed();
             tsymtotal.push(cont);
+            symReport.dataCont.push(cont.labelfull.replace(/,/g , " ") + ',' + data.tsym[i].total);
             if (i == 0) {
                 $(".currentSintoma > h1").velocity("callout.pulse", 200).html(cont.labelfull + ' ' + cont.value + '%');
             }
         }
+        $('.symReportContainer').html(JSON.stringify(symReport));
+
         $('#sitomorriss').html('');
         new Morris.Donut({
             element: 'sitomorriss',
@@ -642,5 +691,52 @@
         var chartArea2 = document.getElementById('medTwo');
         var areaChart2 = echarts.init(chartArea2);
         areaChart2.setOption(optionArea2);
+    }
+
+    function buildPedTypes(data) {
+
+        var dateArr = getDateArray('full');
+        dateArr.splice(-1, 1);
+        var chartDates = [];
+        for (var i = 0; i < dateArr.length; i++) {
+            chartDates.push(dateArr[i]);
+        }
+        //var tot = chartDates.length;
+        //var reme = +tot - 7;
+        //chartDates.splice(0, reme); // CONTENEDOR DEL RANGO ULTIMOS 7 DIAS
+
+        // OBTENEMOS LOS NUEVOS DOCTORES POR DIA
+        var tipedTot = [];
+        for (var i = 0; i < chartDates.length; i++) {
+            var counter = 0;
+            var counter1 = 0;
+            for (var ii = 0; ii < data.tped.length; ii++) {
+                var created = data.tped[ii].created_at.substring(0, 10);
+                if (chartDates[i] == created) {
+                    if (data.tped[ii].forma_pago == 'Tarjeta') {
+                        counter++;
+                    } else {
+                        counter1++;
+                    }
+                }
+
+            }
+            tipedTot.push({
+                x: chartDates[i],
+                y: counter,
+                z: counter1
+            });
+        }
+
+        /*---- Tipos de PEDIDOS----*/
+        new Morris.Area({
+            element: 'pedidosPagaCont',
+            behaveLikeLine: true,
+            data: tipedTot,
+            xkey: 'x',
+            ykeys: ['y', 'z'],
+            lineColors: ['#ffa22b', '#4d83ff'],
+            labels: ['Tarjeta', 'Contado']
+        });
     }
 </script>
