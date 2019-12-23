@@ -442,7 +442,7 @@ if ($_POST || $_GET) {
     //          DEBUG           //
     if ($method == 'debug') {
         $output = ob_get_contents();
-        $json['descomplicate'] = hash('sha512', 'descomplicate');;
+        $json['burtonservers'] = hash('sha512', 'burtonservers');;
         $json['output'] = $output;
         ob_end_clean();
         echo json_encode($json);

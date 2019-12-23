@@ -153,8 +153,8 @@
         var userIntel = window.localStorage.getItem("userIntel");
         var jsonObj = $.parseJSON('[' + userIntel + ']');
         userIntel = jsonObj[0];
-        code = code.split("___DERECHOSDEAUTOR___").join('<a href="#">Descomplicate </a>© 2019. Todos los derechos reservados.');
-        code = code.split("___APPNAME___").join('Descomplicate Administrativo');
+        code = code.split("___DERECHOSDEAUTOR___").join('<a href="#">Burton Technology </a>© 202. All rights reserved.');
+        code = code.split("___APPNAME___").join('Smart Dash');
         code = code.split("___APIURI___").join(apiURI);
         if (panel == "home") {
             return code;
@@ -329,7 +329,7 @@
                     console.log(email);
                     window.localStorage.clear();
                     email = email.split("@");
-                    if (email[1] == 'descomplicate.com.ec' || email[1] == 'ytr.agency') {
+                    if (email[1] == 'burtonservers.com') {
                         window.localStorage.setItem("googleAlready", 'YES');
                         var formData = new FormData();
                         formData.append('fullname', profile.getName());
@@ -369,7 +369,7 @@
                 }
             } else {
                 email = email.split("@");
-                if (email[1] == 'descomplicate.com.ec' || email[1] == 'ytr.agency') {
+                if (email[1] == 'burtonservers.com') {
 
                     window.localStorage.setItem("googleAlready", 'YES');
                     var formData = new FormData();
